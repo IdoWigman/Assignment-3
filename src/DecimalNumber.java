@@ -67,7 +67,15 @@ public class DecimalNumber {
     private static boolean legalNumericString(String s, int base) {
         boolean ans = true;
         // ---------------write your code BELOW this line only! ------------------
-
+        if ((s == null) || (s.length() == 0) || ((s.length() != 1) && (s.charAt(s.length() - 1) == '0')) || (base <= 1) || (base > 10))
+            ans = false;
+        else {
+            for (int i = 0; (i < s.length()) && ans; i++) {
+                int digit = toInt(s.charAt(i));
+                if (digit < 0 || digit >= base)
+                    ans = false;
+            }
+        }
         // ---------------write your code ABOVE this line only! ------------------
         return ans;
     }
@@ -78,7 +86,10 @@ public class DecimalNumber {
     private static String decimalIncrement(String s) {
         String ans = "";
         // ---------------write your code BELOW this line only! ------------------
-
+        if (!legalNumericString(s, 10)) {
+            throw new IllegalArgumentException("s isn't numeric String in base 10");
+        }
+            ans = decimalIncrement(s, 1);
         // ---------------write your code ABOVE this line only! ------------------
         return ans;
     }
@@ -89,7 +100,19 @@ public class DecimalNumber {
     private static String decimalIncrement(String s, int carry) {
         String ans = "";
         // ---------------write your code BELOW this line only! ------------------
-
+        if (carry == 0)
+            ans = s;
+        else {
+            if (s.length() == 0)
+                ans = "1";
+            else {
+                char c = s.charAt(0);
+                if (c != '9')
+                    ans = (char) (c + 1) + s.substring(1);
+                else
+                    ans = "0" + decimalIncrement(s.substring(1), 1);
+            }
+        }
         // ---------------write your code ABOVE this line only! ------------------
         return ans;
     }
@@ -100,7 +123,10 @@ public class DecimalNumber {
     private static String decimalDouble(String s) {
         String ans = "";
         // ---------------write your code BELOW this line only! ------------------
-
+        if (!legalNumericString(s, 10)) {
+            throw new IllegalArgumentException("s isn't numeric String in base 10");
+        }
+        ans = decimalDouble(s, 0);
         // ---------------write your code ABOVE this line only! ------------------
         return ans;
     }
@@ -111,7 +137,22 @@ public class DecimalNumber {
     private static String decimalDouble(String s, int carry) {
         String ans = "";
         // ---------------write your code BELOW this line only! ------------------
-
+        int current = toInt(s.charAt(s.length() - 1));
+        if (s.length() == 1) {
+            int sum = current * 2 + carry;
+            if (sum < 10)
+                ans += "" + (sum % 10);
+            else
+                ans += "" + (sum % 10) + (sum / 10);
+        }
+        else {
+            String lowerPart = s.substring(0, s.length() - 1);
+            ans += decimalDouble(lowerPart, 0);
+            if(ans.length() > lowerPart.length())
+                ans = ans.substring(0, ans.length() - 1) + decimalDouble("" + current, 1);
+            else
+                ans += decimalDouble("" + current, 0);
+        }
         // ---------------write your code ABOVE this line only! ------------------
         return ans;
     }
@@ -122,7 +163,15 @@ public class DecimalNumber {
     private static String binaryToDecimal(String s) {
         String ans ="";
         // ---------------write your code BELOW this line only! ------------------
-
+        if (s.length() == 1)
+            ans += s;
+        else {
+            String doubledS = decimalDouble(binaryToDecimal(s.substring(1)));
+            if (s.charAt(0) == '1')
+                ans += decimalIncrement(doubledS);
+            else
+                ans += doubledS;
+        }
         // ---------------write your code ABOVE this line only! ------------------
         return ans;
     }
