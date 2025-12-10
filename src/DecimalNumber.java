@@ -11,7 +11,9 @@ public class DecimalNumber {
     // Constructs a DecimalNumber with the given decimal string value
     public DecimalNumber(String value) {
         // ---------------write your code BELOW this line only! ------------------
-
+        if (!legalNumericString(value, 10))
+            throw new IllegalArgumentException("value isn't a numeric string in base 10");
+        this.decimalValue = value;
         // ---------------write your code ABOVE this line only! ------------------
     }
 
@@ -20,7 +22,13 @@ public class DecimalNumber {
     // Constructs a DecimalNumber by converting the given value from the specified base to decimal.
     public DecimalNumber(String value, int base) {
         // ---------------write your code BELOW this line only! ------------------
-
+        if (((base != 2) && (base != 8) && (base != 10)) || (!legalNumericString(value, base)))
+            throw new IllegalArgumentException("invalid input");
+        if (base == 2)
+            value = binaryToDecimal(value);
+        if (base == 8)
+            value = octalToDecimal(value);
+        this.decimalValue = value;
         // ---------------write your code ABOVE this line only! ------------------
     }
 
@@ -87,7 +95,7 @@ public class DecimalNumber {
         String ans = "";
         // ---------------write your code BELOW this line only! ------------------
         if (!legalNumericString(s, 10)) {
-            throw new IllegalArgumentException("s isn't numeric String in base 10");
+            throw new IllegalArgumentException("s isn't a numeric String in base 10");
         }
             ans = decimalIncrement(s, 1);
         // ---------------write your code ABOVE this line only! ------------------
@@ -124,7 +132,7 @@ public class DecimalNumber {
         String ans = "";
         // ---------------write your code BELOW this line only! ------------------
         if (!legalNumericString(s, 10)) {
-            throw new IllegalArgumentException("s isn't numeric String in base 10");
+            throw new IllegalArgumentException("s isn't a numeric String in base 10");
         }
         ans = decimalDouble(s, 0);
         // ---------------write your code ABOVE this line only! ------------------
@@ -182,7 +190,14 @@ public class DecimalNumber {
     private static String octalToDecimal(String s) {
         String ans = "";
         // ---------------write your code BELOW this line only! ------------------
-
+        if (s.length() == 1)
+            ans += s;
+        else {
+            String decimalS = octalToDecimal(s.substring(1));
+            ans = decimalDouble(decimalDouble(decimalDouble(decimalS)));
+            for (int i = 0; i < toInt(s.charAt(0)); i++)
+                ans = decimalIncrement(ans);
+        }
         // ---------------write your code ABOVE this line only! ------------------
         return ans;
     }
