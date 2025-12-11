@@ -8,7 +8,15 @@ public class BigIntegerOperations {
     public static BigInteger sumSmaller(BigInteger n){
         BigInteger sum = null;
         // ---------------write your code BELOW this line only! ------------------
-
+        if (n == null)
+            throw new IllegalArgumentException("n is null");
+        sum = new BigInteger("0");
+        BigInteger current = new BigInteger("1");
+        if (n.max(current).equals(n))
+            while (!current.equals(n)) {
+                sum = sum.add(current);
+                current = current.add(BigInteger.ONE);
+            }
         // ---------------write your code ABOVE this line only! ------------------
         return sum;
     }
@@ -18,7 +26,12 @@ public class BigIntegerOperations {
     //prints n pseudo-random numbers
     public static void printRandoms(int n){
         // ---------------write your code BELOW this line only! ------------------
-
+        if (n < 0)
+            throw new IllegalArgumentException("n is negative");
+        Random random = new Random();
+        for (int i = 0; i < n; i++) {
+            System.out.println(random.nextInt());
+        }
         // ---------------write your code ABOVE this line only! ------------------
     }
 
@@ -28,7 +41,19 @@ public class BigIntegerOperations {
     public static boolean isPrime(BigInteger n){
         boolean ans = true;
         // ---------------write your code BELOW this line only! ------------------
-
+        if ((n == null) || (n.compareTo(BigInteger.ZERO) < 0))
+            throw new IllegalArgumentException("n is invalid");
+        BigInteger divider = new BigInteger("2");
+        boolean isPrime = false;
+        if (n.compareTo(divider) >= 0) {
+            isPrime = true;
+            while ((isPrime) && (n.compareTo(divider.pow(2)) >= 0)) {
+                if (n.mod(divider).equals(BigInteger.ZERO))
+                    isPrime = false;
+                divider = divider.add(BigInteger.ONE);
+            }
+        }
+        ans = isPrime;
         // ---------------write your code ABOVE this line only! ------------------
         return ans;
     }
@@ -39,7 +64,14 @@ public class BigIntegerOperations {
     public static BigInteger randomPrime(int n){
         BigInteger myRand = null;
         // ---------------write your code BELOW this line only! ------------------
-
+        if (n <= 1)
+            throw new IllegalArgumentException("n has to be greater than 1");
+        boolean isPrime = false;
+        while (!isPrime) {
+            Random random = new Random();
+            myRand = new BigInteger(n, random);
+            isPrime = isPrime(myRand);
+        }
         // ---------------write your code ABOVE this line only! ------------------
         return myRand;
     }
@@ -50,7 +82,16 @@ public class BigIntegerOperations {
     public static boolean isValidPrimesArray(BigInteger[] primes) {
         boolean isValid = true; // Assume the array is valid initially
         // ---------------write your code BELOW this line only! ------------------
-
+        if (primes == null)
+            isValid = false;
+        else if (primes.length > 0) {
+            BigInteger prev = primes[0];
+            isValid = isPrime(prev);
+            for (int i = 1; (i < primes.length) && (isValid); i++) {
+                isValid = ((isPrime(primes[i])) && (primes[i].compareTo(prev) > 0));
+                prev = primes[i];
+            }
+        }
         // ---------------write your code ABOVE this line only! ------------------
         return isValid;
     }
