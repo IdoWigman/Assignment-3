@@ -103,18 +103,60 @@ public class BigIntegerOperations {
     public static boolean canFactorizeToTarget(BigInteger[] primes, BigInteger n) {
         boolean ans = true;
         // ---------------write your code BELOW this line only! ------------------
-
+        if ((n == null) || (n.compareTo(BigInteger.ONE) <= 0) || (!isValidPrimesArray(primes)))
+            throw new IllegalArgumentException("input is invalid");
+        ans = canFactorizeToTarget(primes, n, BigInteger.ZERO, 0);
         // ---------------write your code ABOVE this line only! ------------------
         return ans;
     }
+
+    //Helper for task 2.6
+    //Assumes primes != null, n !=null, n>1 and currentI >= 0. 'primes' is sorted, and includes only unique prime numbers.
+    //Returns true iff n can be expressed as a product of prime numbers from primes
+    public static boolean canFactorizeToTarget(BigInteger[] primes, BigInteger n, BigInteger remain, int currentI) {
+        boolean ans = false;
+        if (remain.equals(BigInteger.ZERO)) {
+            ans = n.compareTo(BigInteger.ONE) == 0;
+            if ((n.compareTo(BigInteger.ONE) > 0) && (currentI < primes.length)) {
+                BigInteger currentB = primes[currentI];
+                boolean firstC = canFactorizeToTarget(primes, n.divide(currentB), n.remainder(currentB), currentI);
+                boolean secondC = canFactorizeToTarget(primes, n.divide(currentB), n.remainder(currentB), currentI + 1);
+                boolean thirdC = canFactorizeToTarget(primes, n, remain, currentI + 1);
+                ans = firstC ||  secondC || thirdC;
+            }
+        }
+        return ans;
+    }
+
 
     //Task 2.7
     //Assumes primes != null, n !=null, and n>1. 'primes' is sorted, and includes only unique prime numbers.
     //If n can be expressed as a product of prime numbers from primes, it prints the numbers in the factorization
     public static void printFactorization(BigInteger[] primes, BigInteger n) {
         // ---------------write your code BELOW this line only! ------------------
-
+        if ((n == null) || (n.compareTo(BigInteger.ONE) <= 0) || (!isValidPrimesArray(primes)))
+            throw new IllegalArgumentException("input is invalid");
+        if (canFactorizeToTarget(primes, n))
+            printFactorization(primes, n, BigInteger.ZERO, 0, "");
         // ---------------write your code ABOVE this line only! ------------------
+    }
+
+    //Helper for task 2.7
+    //Assumes primes != null, n !=null, n>1 and currentI >= 0. 'primes' is sorted, and includes only unique prime numbers.
+    //If n can be expressed as a product of prime numbers from primes, it prints the numbers in the factorization
+    public static void printFactorization(BigInteger[] primes, BigInteger n, BigInteger remain, int currentI, String ans) {
+        if (remain.equals(BigInteger.ZERO))
+            if ((n.compareTo(BigInteger.ONE) > 0) && (currentI < primes.length)) {
+                BigInteger currentB = primes[currentI];
+                BigInteger dividedN = n.divide(currentB);
+                BigInteger remainderN = n.remainder(currentB);
+                if ((dividedN.equals(BigInteger.ONE)) && (remainderN.equals(BigInteger.ZERO)))
+                    System.out.println(ans + currentB);
+                else {
+                    printFactorization(primes, dividedN, remainderN, currentI, ans + currentB + ",");
+                    printFactorization(primes, n, remain, currentI + 1, ans);
+                }
+            }
     }
 
 }
