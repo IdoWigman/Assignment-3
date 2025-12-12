@@ -5,7 +5,7 @@ public class BigIntegerOperations {
     //Task 2.1
     //Assumes n!=null
     //Returns the sum of positive integers smaller than n
-    public static BigInteger sumSmaller(BigInteger n){
+    public static BigInteger sumSmaller(BigInteger n) {
         BigInteger sum = null;
         // ---------------write your code BELOW this line only! ------------------
         if (n == null)
@@ -24,7 +24,7 @@ public class BigIntegerOperations {
     //Task 2.2
     //Assumes n>=0
     //prints n pseudo-random numbers
-    public static void printRandoms(int n){
+    public static void printRandoms(int n) {
         // ---------------write your code BELOW this line only! ------------------
         if (n < 0)
             throw new IllegalArgumentException("n is negative");
@@ -38,7 +38,7 @@ public class BigIntegerOperations {
     //Task 2.3
     // Assumes n!=null and n>=0
     //Returns true iff n is a prime number
-    public static boolean isPrime(BigInteger n){
+    public static boolean isPrime(BigInteger n) {
         boolean ans = true;
         // ---------------write your code BELOW this line only! ------------------
         if ((n == null) || (n.compareTo(BigInteger.ZERO) < 0))
@@ -61,7 +61,7 @@ public class BigIntegerOperations {
     //Task 2.4
     //Assumes n>1
     //Returns a randomly chosen prime number, smaller than 2^n
-    public static BigInteger randomPrime(int n){
+    public static BigInteger randomPrime(int n) {
         BigInteger myRand = null;
         // ---------------write your code BELOW this line only! ------------------
         if (n <= 1)
@@ -122,7 +122,7 @@ public class BigIntegerOperations {
                 boolean firstC = canFactorizeToTarget(primes, n.divide(currentB), n.remainder(currentB), currentI);
                 boolean secondC = canFactorizeToTarget(primes, n.divide(currentB), n.remainder(currentB), currentI + 1);
                 boolean thirdC = canFactorizeToTarget(primes, n, remain, currentI + 1);
-                ans = firstC ||  secondC || thirdC;
+                ans = firstC || secondC || thirdC;
             }
         }
         return ans;
